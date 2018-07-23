@@ -32,7 +32,7 @@ Page was downloaded as 'ru-hexlet-io-courses.html'
 ```
 ## Install
 
-`npm install -g pageLoader-ostart-js`
+`npm install -g page-loader-ostart-js`
 
 ## Usage
 
