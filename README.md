@@ -1,10 +1,10 @@
 # project-lvl3-s286
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/9eba949dd743df74bde0/maintainability)](https://codeclimate.com/github/ostart/project-lvl3-s286/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7030827fc5005bbb0f0e/maintainability)](https://codeclimate.com/github/ostart/project-lvl3-s286/maintainability)
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/9eba949dd743df74bde0/test_coverage)](https://codeclimate.com/github/ostart/project-lvl3-s286/test_coverage)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7030827fc5005bbb0f0e/test_coverage)](https://codeclimate.com/github/ostart/project-lvl3-s286/test_coverage)
 
-[![Build Status](https://travis-ci.org/ostart/project-lvl3-s274.svg?branch=master)](https://travis-ci.org/ostart/project-lvl3-s286)
+[![Build Status](https://travis-ci.org/ostart/project-lvl3-s286.svg?branch=master)](https://travis-ci.org/ostart/project-lvl3-s286)
 
 # Загрузчик страниц (Третий проект на Hexlet.io)
 
