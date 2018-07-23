@@ -1,0 +1,62 @@
+{
+  "name": "pageLoader-ostart-js",
+  "version": "1.0.1",
+  "description": "third hexlet project node.js",
+  "main": "dist/index.js",
+  "bin": {
+    "page-loader": "dist/bin/page-loader.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest",
+    "babel-node": "babel-node",
+    "build": "set NODE_ENV=production && babel src --out-dir dist --source-maps inline",
+    "eslint": "eslint",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostart/project-lvl3-s286.git"
+  },
+  "keywords": [
+    "third",
+    "hexlet",
+    "project"
+  ],
+  "author": "Artem Osta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ostart/project-lvl3-s286/issues"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "homepage": "https://github.com/ostart/project-lvl3-s286#readme",
+  "devDependencies": {
+    "babel-cli": "*",
+    "babel-core": "*",
+    "babel-eslint": "*",
+    "babel-jest": "^23.2.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "*",
+    "babel-preset-stage-0": "*",
+    "debug": "*",
+    "eslint": "4.*",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-babel": "*",
+    "eslint-plugin-flowtype": "*",
+    "eslint-plugin-import": "*",
+    "eslint-plugin-jest": "*",
+    "jest": "^22",
+    "jest-cli": "^22.4.2"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel-plugin-transform-runtime": "*",
+    "commander": "^2.15.1",
+    "mz": "^2.7.0",
+    "nock": "^9.4.1"
+  }
+}
