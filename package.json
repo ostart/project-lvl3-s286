@@ -31,7 +31,8 @@
     "url": "https://github.com/ostart/project-lvl3-s286/issues"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": ["<rootDir>/__tests__/barbershop", "<rootDir>/node_modules/"]
   },
   "homepage": "https://github.com/ostart/project-lvl3-s286#readme",
   "devDependencies": {
@@ -57,6 +58,7 @@
     "babel-plugin-transform-runtime": "*",
     "commander": "^2.15.1",
     "mz": "^2.7.0",
-    "nock": "^9.4.1"
+    "nock": "^9.4.1",
+    "cheerio": "^1.0.0-rc.2"
   }
 }
