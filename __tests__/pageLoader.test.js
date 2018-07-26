@@ -4,7 +4,6 @@ import nock from 'nock';
 import path from 'path';
 import pageLoad from '../src';
 
-
 describe('Page Loader', () => {
   beforeAll(() => {
     nock.disableNetConnect();

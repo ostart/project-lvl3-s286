@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import program from 'commander';
 import pageLoad from '..';
+import { version } from '../../package.json';
 
 const currentDir = process.cwd();
 program
-  .version('1.1.2')
+  .version(version)
   .description('Download pages with sources in local folder.')
   .option('-o, --output [folder]', 'output local folder', currentDir)
   .arguments('<urlLink>')

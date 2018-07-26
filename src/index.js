@@ -1,18 +1,21 @@
 import fs from 'mz/fs';
 import path from 'path';
 import url from 'url';
+import debug from 'debug';
 import axios from './lib/axios';
 import { makeFileName, makeDirName } from './lib/transformUrl';
 import { getResourceLinks, transformHtml, getResourceFileName } from './lib/workWithPage';
 
+const debugLog = debug('page-loader:');
+
 const downloadFile = (urlLink, resourceLink, localFolder) => {
   const downloadLink = url.resolve(urlLink, resourceLink);
-  // console.log(downloadLink);
+  debugLog(`Download link: ${downloadLink}`);
   const newFileName = getResourceFileName(resourceLink);
   const newPathToFile = path.join(localFolder, newFileName);
-  // console.log(newPathToFile);
   return axios.get(downloadLink, { responseType: 'stream' })
-    .then(response => response.data.pipe(fs.createWriteStream(newPathToFile)));
+    .then(response => response.data.pipe(fs.createWriteStream(newPathToFile)))
+    .then(() => debugLog(`Resource file was downloaded to: ${newPathToFile}`));
 };
 
 const downloadFiles = (urlLink, objRespDataResourceLinks, localFolder) => {
@@ -34,6 +37,7 @@ const pageLoad = async (urlLink, localFolder) => {
     .then(objRespDataResourceLinks => downloadFiles(urlLink, objRespDataResourceLinks, localFolder))
     .then(respData => transformHtml(respData, makeDirName(urlLink)))
     .then(finalHtml => fs.writeFile(path.join(localFolder, newFileNameWithExt), finalHtml, 'utf-8'))
+    .then(() => debugLog(`Main file ${newFileNameWithExt} was downloaded to ${localFolder}`))
     .then(() => true);
 
   // const flag = await fs.exists(localFolder);
@@ -51,3 +55,4 @@ const pageLoad = async (urlLink, localFolder) => {
 export default pageLoad;
 
 // pageLoad('https://www.iana.org/domains/reserved', '/var/tmp/');
+// DEBUG="page-loader:*" page-loader --output /var/tmp/ https://www.iana.org/domains/reserved
