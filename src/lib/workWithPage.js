@@ -3,41 +3,32 @@ import url from 'url';
 import path from 'path';
 import _ from 'lodash';
 
+const kvPairsTagAttr = {
+  img: 'src',
+  script: 'src',
+  link: 'href',
+};
+
 export const getResourceLinks = (data) => {
   const $ = cheerio.load(data);
-  const resourceLinks = [];
+  const tags = Object.keys(kvPairsTagAttr);
 
-  $('img').each((i, elem) => {
-    const res = $(elem).attr('src');
-    if (res) {
-      const linkObj = url.parse(res);
-      if (!linkObj.protocol) {
-        resourceLinks.push(res);
+  const callbackFn = (acc, currTag) => {
+    const resourceLinks = [];
+    $(currTag).each((i, elem) => {
+      const res = $(elem).attr(kvPairsTagAttr[currTag]);
+      if (res) {
+        const linkObj = url.parse(res);
+        if (!linkObj.protocol) {
+          resourceLinks.push(res);
+        }
       }
-    }
-  });
+    });
+    return [...acc, ...resourceLinks];
+  };
 
-  $('script').each((i, elem) => {
-    const res = $(elem).attr('src');
-    if (res) {
-      const linkObj = url.parse(res);
-      if (!linkObj.protocol) {
-        resourceLinks.push(res);
-      }
-    }
-  });
-
-  $('link').each((i, elem) => {
-    const res = $(elem).attr('href');
-    if (res) {
-      const linkObj = url.parse(res);
-      if (!linkObj.protocol) {
-        resourceLinks.push(res);
-      }
-    }
-  });
-
-  return resourceLinks;
+  const resourceLinks = tags.reduce(callbackFn, []);
+  return { data, resourceLinks };
 };
 
 export const getResourceFileName = (relativePath) => {
@@ -47,39 +38,21 @@ export const getResourceFileName = (relativePath) => {
 
 export const transformHtml = (data, localPath) => {
   const $ = cheerio.load(data);
+  const tags = Object.keys(kvPairsTagAttr);
 
-  $('img').each((i, elem) => {
-    const res = $(elem).attr('src');
-    if (res) {
-      const linkObj = url.parse(res);
-      if (!linkObj.protocol) {
-        const newPath = path.join(localPath, getResourceFileName(res));
-        $(elem).attr('src', newPath);
+  const callbackFn = (currTag) => {
+    $(currTag).each((i, elem) => {
+      const res = $(elem).attr(kvPairsTagAttr[currTag]);
+      if (res) {
+        const linkObj = url.parse(res);
+        if (!linkObj.protocol) {
+          const newPath = path.join(localPath, getResourceFileName(res));
+          $(elem).attr(kvPairsTagAttr[currTag], newPath);
+        }
       }
-    }
-  });
+    });
+  };
 
-  $('script').each((i, elem) => {
-    const res = $(elem).attr('src');
-    if (res) {
-      const linkObj = url.parse(res);
-      if (!linkObj.protocol) {
-        const newPath = path.join(localPath, getResourceFileName(res));
-        $(elem).attr('src', newPath);
-      }
-    }
-  });
-
-  $('link').each((i, elem) => {
-    const res = $(elem).attr('href');
-    if (res) {
-      const linkObj = url.parse(res);
-      if (!linkObj.protocol) {
-        const newPath = path.join(localPath, getResourceFileName(res));
-        $(elem).attr('href', newPath);
-      }
-    }
-  });
-
+  tags.map(callbackFn);
   return $.html();
 };
