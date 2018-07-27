@@ -17,7 +17,8 @@ lint:
 	npm run eslint .
 
 test:
-	DEBUG="page-loader:*" npm test
+	npm test
+	# DEBUG="page-loader:*" npm test
 
 watch:
 	DEBUG="page-loader:*" npm test -- --watch

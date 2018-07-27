@@ -2,6 +2,7 @@
 import program from 'commander';
 import pageLoad from '..';
 import { version } from '../../package.json';
+import errorMessage from '../lib/errorMessage';
 
 const currentDir = process.cwd();
 program
@@ -13,7 +14,11 @@ program
     const urlLink = firstArg;
     const localFolder = options.output;
     pageLoad(urlLink, localFolder)
-      .catch(e => console.log(e));
+      .then(() => process.exit(0))
+      .catch((e) => {
+        console.error(errorMessage(e));
+        process.exit(1);
+      });
   });
 
 program.parse(process.argv);

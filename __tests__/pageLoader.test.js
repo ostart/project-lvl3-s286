@@ -9,15 +9,14 @@ describe('Page Loader', () => {
     nock.disableNetConnect();
   });
 
-  it('test data', async () => {
+  it('test simple page', async () => {
     const host = 'http://ru.hexlet.io';
     const body = '<html><head></head><body>test data</body></html>';
     nock(host).get('/').reply(200, body);
 
-    // создать временную директорию
+    // создать временную директорию и скачать файл
     const tempDir = await fs.mkdtemp(`${os.tmpdir()}${path.sep}`);
-    const response = await pageLoad(host, tempDir);
-    expect(response).toBe(true);
+    await pageLoad(host, tempDir);
     // проверить что есть файл во временной директории с именем ru-hexlet-io.html
     const fileName = 'ru-hexlet-io.html';
     const isFileExists = await fs.exists(path.join(tempDir, fileName));
@@ -27,7 +26,7 @@ describe('Page Loader', () => {
     expect(fileContent).toBe(body);
   });
 
-  it('test resource files', async () => {
+  it('test page with resource files', async () => {
     const host = 'http://ru.hexlet.io';
     nock(host).get('/').replyWithFile(200, path.join(__dirname, 'barbershop/catalog-item.html'));
     nock(host).get('/css/normalize.css').replyWithFile(200, path.join(__dirname, 'barbershop/css/normalize.css'));
@@ -39,10 +38,9 @@ describe('Page Loader', () => {
     nock(host).get('/img/small_figure3.jpg').replyWithFile(200, path.join(__dirname, 'barbershop/img/small_figure3.jpg'));
     nock(host).get('/js/script.js').replyWithFile(200, path.join(__dirname, 'barbershop/js/script.js'));
 
-    // создать временную директорию
+    // создать временную директорию и скачать файлы
     const tempDir = await fs.mkdtemp(`${os.tmpdir()}${path.sep}`);
-    const response = await pageLoad(host, tempDir);
-    expect(response).toBe(true);
+    await pageLoad(host, tempDir);
     // проверить что есть файл во временной директории с именем ru-hexlet-io.html
     const fileName = 'ru-hexlet-io.html';
     const isFileExists = await fs.exists(path.join(tempDir, fileName));
@@ -68,5 +66,51 @@ describe('Page Loader', () => {
     expect(isFile7Exists).toBe(true);
     const isFile8Exists = await fs.exists(path.join(tempDir, dirName, 'js-script.js'));
     expect(isFile8Exists).toBe(true);
+  });
+
+  it('test directory not exist', async () => {
+    const host = 'http://ru.hexlet.io';
+    const body = '<html><head></head><body>Page not found</body></html>';
+    nock(host).get('/').reply(200, body);
+
+    // создать временную директорию
+    const tempDir = '/var/tyuio4m325/';
+    try {
+      await pageLoad(host, tempDir);
+    } catch (e) {
+      expect(e.code).toBe('ENOENT');
+    }
+  });
+
+  it('test main page 404 error response', async () => {
+    const host = 'http://ru.hexlet.io';
+    const body = '<html><head></head><body>Page not found</body></html>';
+    nock(host).get('/').reply(404, body);
+
+    // создать временную директорию
+    const tempDir = await fs.mkdtemp(`${os.tmpdir()}${path.sep}`);
+    try {
+      await pageLoad(host, tempDir);
+    } catch (e) {
+      expect(e.response.status).toBe(404);
+      expect(e.response.data).toBe(body);
+    }
+  });
+
+  it('test 404 for resource files', async () => {
+    const host = 'http://ru.hexlet.io';
+    nock(host).get('/').replyWithFile(200, path.join(__dirname, 'barbershop/catalog-item.html'));
+    nock(host).get('/css/normalize.css').replyWithFile(200, path.join(__dirname, 'barbershop/css/normalize.css'));
+    nock(host).get('/css/style.css').reply(404);
+    nock(host).get('/img/small_logo.png').replyWithFile(200, path.join(__dirname, 'barbershop/img/small_logo.png'));
+    nock(host).get('/img/main-figure.jpg').replyWithFile(200, path.join(__dirname, 'barbershop/img/main-figure.jpg'));
+    nock(host).get('/img/small_figure1.jpg').replyWithFile(200, path.join(__dirname, 'barbershop/img/small_figure1.jpg'));
+    nock(host).get('/img/small_figure2.jpg').replyWithFile(200, path.join(__dirname, 'barbershop/img/small_figure2.jpg'));
+    nock(host).get('/img/small_figure3.jpg').replyWithFile(200, path.join(__dirname, 'barbershop/img/small_figure3.jpg'));
+    nock(host).get('/js/script.js').replyWithFile(200, path.join(__dirname, 'barbershop/js/script.js'));
+
+    // создать временную директорию и скачать файлы
+    const tempDir = await fs.mkdtemp(`${os.tmpdir()}${path.sep}`);
+    await expect(pageLoad(host, tempDir)).rejects.toMatchSnapshot();
   });
 });
