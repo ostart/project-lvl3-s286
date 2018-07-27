@@ -2,6 +2,7 @@ import fs from 'mz/fs';
 import path from 'path';
 import url from 'url';
 import debug from 'debug';
+import Listr from 'listr';
 import axios from './lib/axios';
 import { makeFileName, makeDirName } from './lib/transformUrl';
 import { getResourceLinks, transformHtml, getResourceFileName } from './lib/workWithPage';
@@ -18,14 +19,27 @@ const downloadFile = (urlLink, resourceLink, localFolder) => {
     .then(() => debugLog(`Resource file was downloaded to: ${newPathToFile}`));
 };
 
+const makeTasks = (urlLink, resourceLinks, newDirPath) => {
+  const tasks = resourceLinks.reduce((acc, currLink) => {
+    const currTask = {
+      title: `${url.resolve(urlLink, currLink)}`,
+      task: () => downloadFile(urlLink, currLink, newDirPath),
+    };
+    return [...acc, currTask];
+  }, []);
+  return new Listr(tasks, { concurrent: true });
+};
+
 const downloadFiles = (urlLink, objRespDataResourceLinks, localFolder) => {
   const { data, resourceLinks } = objRespDataResourceLinks;
   const newDirName = makeDirName(urlLink);
   const newDirPath = path.join(localFolder, newDirName);
   return fs.mkdir(newDirPath)
-    .then(() => Promise.all(
-      resourceLinks.map(currLink => downloadFile(urlLink, currLink, newDirPath)),
-    ))
+    // .then(() => Promise.all(
+    //   resourceLinks.map(currLink => downloadFile(urlLink, currLink, newDirPath)),
+    // ))
+    .then(() => makeTasks(urlLink, resourceLinks, newDirPath))
+    .then(tasks => tasks.run())
     .then(() => data);
 };
 
@@ -37,7 +51,10 @@ const pageLoad = async (urlLink, localFolder) => {
     .then(objRespDataResourceLinks => downloadFiles(urlLink, objRespDataResourceLinks, localFolder))
     .then(respData => transformHtml(respData, makeDirName(urlLink)))
     .then(finalHtml => fs.writeFile(path.join(localFolder, newFileNameWithExt), finalHtml, 'utf-8'))
-    .then(() => debugLog(`Main file ${newFileNameWithExt} was downloaded to ${localFolder}`));
+    .then(() => {
+      debugLog(`Main file ${newFileNameWithExt} was downloaded to ${localFolder}`);
+      return `Page was downloaded as '${newFileNameWithExt}'`;
+    });
 
   // const flag = await fs.exists(localFolder);
   // if (flag) {

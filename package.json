@@ -1,6 +1,6 @@
 {
   "name": "page-loader-ostart-js",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "third hexlet project node.js",
   "main": "dist/index.js",
   "bin": {
@@ -60,6 +60,7 @@
     "mz": "^2.7.0",
     "nock": "^9.4.1",
     "cheerio": "^1.0.0-rc.2",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "listr": "^0.14.1"
   }
 }

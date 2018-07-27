@@ -13,8 +13,12 @@ program
   .action((firstArg, options) => {
     const urlLink = firstArg;
     const localFolder = options.output;
+    console.log();
     pageLoad(urlLink, localFolder)
-      .then(() => process.exit(0))
+      .then((message) => {
+        console.log(`\n${message}`);
+        process.exit(0);
+      })
       .catch((e) => {
         console.error(errorMessage(e));
         process.exit(1);
