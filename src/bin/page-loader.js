@@ -17,7 +17,7 @@ program
     pageLoad(urlLink, localFolder)
       .then((message) => {
         console.log(`\n${message}`);
-        process.exit(0);
+        process.exitCode = 0;
       })
       .catch((e) => {
         console.error(errorMessage(e));

@@ -51,6 +51,9 @@ const pageLoad = async (urlLink, localFolder) => {
     .then(objRespDataResourceLinks => downloadFiles(urlLink, objRespDataResourceLinks, localFolder))
     .then(respData => transformHtml(respData, makeDirName(urlLink)))
     .then(finalHtml => fs.writeFile(path.join(localFolder, newFileNameWithExt), finalHtml, 'utf-8'))
+    // .then(() => debugLog(`Main file ${newFileNameWithExt} was downloaded to ${localFolder}`))
+    // .then(() => `Page was downloaded as '${newFileNameWithExt}'`);
+
     .then(() => {
       debugLog(`Main file ${newFileNameWithExt} was downloaded to ${localFolder}`);
       return `Page was downloaded as '${newFileNameWithExt}'`;
