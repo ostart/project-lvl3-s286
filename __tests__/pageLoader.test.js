@@ -16,9 +16,10 @@ describe('Page Loader', () => {
 
     // создать временную директорию и скачать файл
     const tempDir = await fs.mkdtemp(`${os.tmpdir()}${path.sep}`);
-    await pageLoad(host, tempDir);
-    // проверить что есть файл во временной директории с именем ru-hexlet-io.html
+    const message = await pageLoad(host, tempDir);
     const fileName = 'ru-hexlet-io.html';
+    expect(message).toBe(`Page was downloaded as '${fileName}'`);
+    // проверить что есть файл во временной директории с именем ru-hexlet-io.html
     const isFileExists = await fs.exists(path.join(tempDir, fileName));
     expect(isFileExists).toBe(true);
     // проверить что содержимое файла 'test data'
@@ -40,9 +41,10 @@ describe('Page Loader', () => {
 
     // создать временную директорию и скачать файлы
     const tempDir = await fs.mkdtemp(`${os.tmpdir()}${path.sep}`);
-    await pageLoad(host, tempDir);
-    // проверить что есть файл во временной директории с именем ru-hexlet-io.html
+    const message = await pageLoad(host, tempDir);
     const fileName = 'ru-hexlet-io.html';
+    expect(message).toBe(`Page was downloaded as '${fileName}'`);
+    // проверить что есть файл во временной директории с именем ru-hexlet-io.html
     const isFileExists = await fs.exists(path.join(tempDir, fileName));
     expect(isFileExists).toBe(true);
     // проверить что есть директория с ресурсами во временной директории с именем ru-hexlet-io_files
